@@ -548,6 +548,15 @@ class Agent:
         # concatenate system prompt
         system_text = "\n\n".join(loop_data.system)
 
+        # DEBUG: dump system prompt to file for inspection
+        import os as _os
+        _debug_dir = _os.path.join(_os.path.dirname(__file__), "tmp", "debug_prompts")
+        _os.makedirs(_debug_dir, exist_ok=True)
+        _debug_file = _os.path.join(_debug_dir, f"agent_{self.number}_{self.config.profile}_sysprompt.md")
+        with open(_debug_file, "w") as _f:
+            _f.write(system_text)
+        PrintStyle().print(f"[DEBUG PROMPT] Agent #{self.number} ({self.config.profile}) system prompt written to {_debug_file} ({len(system_text)} chars)")
+
         # join extras
         extras = history.Message(  # type: ignore[abstract]
             False,

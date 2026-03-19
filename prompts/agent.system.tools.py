@@ -17,7 +17,15 @@ class BuidToolsPrompt(VariablesPlugin):
 
         # collect all tool instruction files
         prompt_files = files.get_unique_filenames_in_dirs(folders, "agent.system.tool.*.md")
-        
+
+        # DEBUG: log tool prompt files being loaded per agent
+        agent = kwargs.get("_agent", None)
+        agent_label = f"Agent #{agent.number} ({agent.config.profile})" if agent else "Unknown agent"
+        tool_names = [os.path.basename(pf) for pf in prompt_files]
+        PrintStyle().print(f"\n[DEBUG TOOLS] {agent_label} — {len(tool_names)} tool prompts loaded:")
+        for tn in sorted(tool_names):
+            PrintStyle().print(f"  - {tn}")
+
         # load tool instructions
         tools = []
         for prompt_file in prompt_files:
